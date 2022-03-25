@@ -586,8 +586,8 @@ resource vpnGatewayResource 'Microsoft.Network/virtualNetworkGateways@2019-11-01
       }
     ]
     sku: {
-      name: 'Basic'
-      tier: 'Basic'
+      name: 'Standard'
+      tier: 'Standard'
     }
     gatewayType: 'Vpn'
     vpnType: 'RouteBased'
