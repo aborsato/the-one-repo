@@ -20,14 +20,6 @@ param spokeNetworkTwo object = {
   subnetNsgName: 'nsg-spoke-two-resources'
 }
 
-param azureFirewall object = {
-  name: 'AzureFirewall'
-  publicIPAddressName: 'pip-firewall'
-  subnetName: 'AzureFirewallSubnet'
-  subnetPrefix: '10.0.3.0/26'
-  routeName: 'r-nexthop-to-fw'
-}
-
 param bastionHost object = {
   name: 'AzureBastionHost'
   publicIPAddressName: 'pip-bastion'
@@ -72,12 +64,6 @@ resource vnetHub 'Microsoft.Network/virtualNetworks@2020-05-01' = {
     }
     subnets: [
       {
-        name: azureFirewall.subnetName
-        properties: {
-          addressPrefix: azureFirewall.subnetPrefix
-        }
-      }
-      {
         name: bastionHost.subnetName
         properties: {
           addressPrefix: bastionHost.subnetPrefix
@@ -102,82 +88,6 @@ resource diahVnetHub 'microsoft.insights/diagnosticSettings@2017-05-01-preview' 
       {
         category: 'VMProtectionAlerts'
         enabled: true
-      }
-    ]
-  }
-}
-
-resource pipFirewall 'Microsoft.Network/publicIPAddresses@2019-11-01' = {
-  name: azureFirewall.publicIPAddressName
-  location: location
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-  }
-}
-
-resource firewall 'Microsoft.Network/azureFirewalls@2020-05-01' = {
-  name: azureFirewall.name
-  location: location
-  properties: {
-    sku: {
-      name: 'AZFW_VNet'
-      tier: 'Standard'
-    }
-    threatIntelMode: 'Alert'
-    ipConfigurations: [
-      {
-        name: azureFirewall.name
-        properties: {
-          publicIPAddress: {
-            id: pipFirewall.id
-          }
-          subnet: {
-            id: '${vnetHub.id}/subnets/${azureFirewall.subnetName}'
-          }
-        }
-      }
-    ]
-  }
-}
-
-resource diagFirewall 'microsoft.insights/diagnosticSettings@2017-05-01-preview' = {
-  name: 'diagFirewall'
-  scope: firewall
-  properties: {
-    workspaceId: logAnalyticsWorkspace.id
-    logs: [
-      {
-        category: 'AzureFirewallApplicationRule'
-        enabled: true
-      }
-      {
-        category: 'AzureFirewallNetworkRule'
-        enabled: true
-      }
-      {
-        category: 'AzureFirewallDnsProxy'
-        enabled: true
-      }
-    ]
-  }
-}
-
-resource azureFirewallRoutes 'Microsoft.Network/routeTables@2020-05-01' = {
-  name: azureFirewall.routeName
-  location: location
-  properties: {
-    disableBgpRoutePropagation: false
-    routes: [
-      {
-        name: azureFirewall.routeName
-        properties: {
-          addressPrefix: '0.0.0.0/0'
-          nextHopType: 'VirtualAppliance'
-          nextHopIpAddress: reference(firewall.id, '2020-05-01').ipConfigurations[0].properties.privateIpAddress
-        }
       }
     ]
   }
