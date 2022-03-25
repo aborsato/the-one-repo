@@ -36,7 +36,7 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az group create -n ${{ RESOURCE_GROUP }} -l eastus2
+            az group create -n ${{ env.RESOURCE_GROUP }} -l eastus2
 
       # Deploy Bicep file
       - name: deploy
