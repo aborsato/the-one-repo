@@ -49,7 +49,7 @@ param location string = resourceGroup().location
 
 var logAnalyticsWorkspaceName = uniqueString(subscription().subscriptionId, resourceGroup().id)
 
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08-01' = {
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
   name: logAnalyticsWorkspaceName
   location: location
   properties: {
