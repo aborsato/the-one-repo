@@ -54,7 +54,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12
   location: location
   properties: {
     sku: {
-      name: 'Standard'
+      name: 'PerGB2018'
     }
   }
 }
