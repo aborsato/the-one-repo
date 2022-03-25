@@ -36,7 +36,7 @@ param bastionHost object = {
   subnetPrefix: '10.0.1.0/29'
 }
 
-param deployVpnGateway bool = true
+param deployVpnGateway bool = false
 
 param vpnGateway object = {
   name: 'vgw-gateway'
