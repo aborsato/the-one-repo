@@ -54,7 +54,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2020-08
   location: location
   properties: {
     sku: {
-      name: 'Free'
+      name: 'Standard'
     }
   }
 }
