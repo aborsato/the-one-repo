@@ -45,5 +45,5 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ env.RESOURCE_GROUP }}
           template: ./hub-spoke/main.bicep
-          parameters: deployVpnGateway=true
+          parameters: deployVpnGateway=true vpnClientRootCert=${{ secrets.VPN_CLIENT_ROOT_CERT }}
           failOnStdErr: false

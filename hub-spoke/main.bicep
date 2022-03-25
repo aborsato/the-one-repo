@@ -46,6 +46,8 @@ param vpnGateway object = {
 }
 
 param location string = resourceGroup().location
+@description('The public key of the vpn certificate, in base64 format')
+param vpnClientRootCert string = ''
 
 var logAnalyticsWorkspaceName = uniqueString(subscription().subscriptionId, resourceGroup().id)
 
@@ -592,6 +594,25 @@ resource vpnGatewayResource 'Microsoft.Network/virtualNetworkGateways@2019-11-01
     gatewayType: 'Vpn'
     vpnType: 'RouteBased'
     enableBgp: false
+    vpnClientConfiguration: {
+      vpnClientProtocols: [
+        'SSTP'
+        'IkeV2'
+      ]
+      vpnClientAddressPool: {
+        addressPrefixes: [
+          '10.100.0.0/16'
+        ]
+      }
+      vpnClientRootCertificates: [
+        {
+          name: 'SelfSignedRoot'
+          properties: {
+            publicCertData: vpnClientRootCert
+          }
+        }
+      ]
+    }
   }
   dependsOn: [
     vnetHub
